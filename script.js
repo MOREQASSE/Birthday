@@ -94,6 +94,21 @@ const mpTrack = $('#mpTrack'), mpFill = $('#mpFill'), mpKnob = document.querySel
 const curTime = $('#curTime'), durTime = $('#durTime');
 const entryOverlay = $('#entryOverlay');
 const ICON_PLAY = svgIcon('i-play'), ICON_PAUSE = svgIcon('i-pause');
+const enterBtn = $('#enterBtn');
+const LOAD_DOTS = '<span class="load-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>';
+function setLoadingUI() {
+  $('#musicPlayer').classList.add('is-loading');
+  const t = document.querySelector('.mp-title');
+  if (t) t.innerHTML = `${ICON_MUSIC} Loading our song${LOAD_DOTS}`;
+  if (enterBtn && !entryOverlay.classList.contains('hidden'))
+    enterBtn.innerHTML = `${ICON_MUSIC} Loading our song${LOAD_DOTS}`;
+}
+function setReadyUI() {
+  $('#musicPlayer').classList.remove('is-loading');
+  const t = document.querySelector('.mp-title');
+  if (t) t.innerHTML = `${ICON_MUSIC} We Belong Together <span class="mp-for">· for Safaa</span>`;
+  if (enterBtn) enterBtn.innerHTML = `${ICON_PLAY} Play our song`;
+}
 function fmt(t) { if (!isFinite(t)) return '0:00'; const m = Math.floor(t / 60), s = Math.floor(t % 60); return m + ':' + String(s).padStart(2, '0'); }
 function setPlayingUI(playing) {
   playPauseBtn.innerHTML = playing ? ICON_PAUSE : ICON_PLAY;
@@ -121,6 +136,19 @@ song.addEventListener('timeupdate', () => {
 });
 song.addEventListener('play', () => { setPlayingUI(true); entryOverlay.classList.add('hidden'); });
 song.addEventListener('pause', () => setPlayingUI(false));
+// loading lifecycle: spinner + shimmer until fully loadable, rebuffer guard mid-play
+song.addEventListener('canplaythrough', () => { setReadyUI(); startSong(); });
+song.addEventListener('playing', () => setReadyUI());
+song.addEventListener('waiting', () => setLoadingUI());
+song.addEventListener('progress', () => {
+  try {
+    if (song.duration && song.buffered.length) {
+      const pct = (song.buffered.end(song.buffered.length - 1) / song.duration) * 100;
+      const buf = $('#mpBuffer');
+      if (buf) buf.style.width = Math.min(100, pct) + '%';
+    }
+  } catch (e) {}
+});
 playPauseBtn.addEventListener('click', () => { if (song.paused) startSong(); else song.pause(); });
 rewindBtn.addEventListener('click', async () => {
   song.currentTime = 0;
@@ -133,12 +161,13 @@ mpTrack.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') song.currentTime = Math.min(song.duration, song.currentTime + 5);
   if (e.key === 'ArrowLeft') song.currentTime = Math.max(0, song.currentTime - 5);
 });
-$('#enterBtn').addEventListener('click', async () => {
+enterBtn.addEventListener('click', async () => {
   await startSong();
   burstConfetti(80);
   chime();
 });
 // autoplay attempt on entry + first-gesture fallback (browsers block unmuted autoplay)
+setLoadingUI();
 startSong();
 window.addEventListener('pointerdown', () => startSong(), { once: true });
 window.addEventListener('keydown', () => startSong(), { once: true });

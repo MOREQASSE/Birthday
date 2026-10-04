@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preload" href="We%20Belong%20Together.mp3" as="audio" fetchpriority="high">
 <title>Happy 21st Birthday Safaa — My Cosmo Queen</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -127,16 +128,16 @@
 <div class="progress-bar" id="progressBar"></div>
 
 <!-- song mini player -->
-<div id="musicPlayer" class="mini-player" role="region" aria-label="Song player">
+<div id="musicPlayer" class="mini-player is-loading" role="region" aria-label="Song player">
   <div class="mp-controls">
     <button id="rewindBtn" class="mp-btn" title="Back to the beginning" aria-label="Restart song"><svg class="icon"><use href="#i-restart"/></svg></button>
     <button id="playPauseBtn" class="mp-btn mp-play" title="Play / pause" aria-label="Pause"><svg class="icon"><use href="#i-pause"/></svg></button>
   </div>
   <div class="mp-meta">
-    <div class="mp-title"><svg class="icon icon-xs"><use href="#i-music"/></svg> We Belong Together <span class="mp-for">· for Safaa</span></div>
+    <div class="mp-title"><svg class="icon icon-xs"><use href="#i-music"/></svg> Loading our song<span class="load-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></div>
     <div class="mp-bar-row">
       <span class="mp-time" id="curTime">0:00</span>
-      <div class="mp-track" id="mpTrack" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="mp-fill" id="mpFill"></div><span class="mp-knob"></span></div>
+      <div class="mp-track" id="mpTrack" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="mp-buffer" id="mpBuffer"></div><div class="mp-fill" id="mpFill"></div><span class="mp-knob"></span></div>
       <span class="mp-time" id="durTime">0:00</span>
     </div>
   </div>
@@ -148,7 +149,7 @@
     <svg class="icon"><use href="#i-heart"/></svg>
     <h2>For Safaa</h2>
     <p>Your song is ready… tap to begin</p>
-    <button class="btn btn-primary" id="enterBtn"><svg class="icon"><use href="#i-play"/></svg> Play our song</button>
+    <button class="btn btn-primary" id="enterBtn"><svg class="icon"><use href="#i-music"/></svg> Loading our song<span class="load-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></button>
   </div>
 </div>
 
